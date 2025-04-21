@@ -1,24 +1,45 @@
 <script src="https://cdn.jsdelivr.net/gh/netizenorg/netnet-standard-library/build/nn.min.js"></script>
 <script>
   /* global nn */
-
-  const GIF = 'https://generativeart.online/images/butterfly.gif'
-  const COLOR = 'aliceblue'
+  const params = new URLSearchParams(location.search)
+  
+  let GIF = 'neko-cat.gif'
+  let COLOR = 'aliceblue'
+  const mode = params.get('mode')
+  
+  if (mode === 'night'){
+    GIF = 'cheweycat-cheweyart.gif'
+    COLOR = 'CornflowerBlue'
+  }
   
   function sleep (ms) {
     return new Promise(resolve => setTimeout(resolve, ms))
   }
   
   function createGif (x, y, w, h, url) {
-    nn.create('img')
+    const gif = nn.create('img')
       .set({ src: `${url}#${Math.random()}` })
       .css({
         position: 'absolute',
-        width: 50,
-        height: 50,
-        left: x - 50 / 2,
-        top: y - 50 / 2
+        width: w/4,
+        height: h/4,
+        left: x - w/4 / 2,
+        top: y - h/4 / 2
       })
+    gif.on('mouseover', () => {
+      gif.css({ 
+        position: 'absolute',
+        width: w/4, 
+        height: h/4,
+        left: 0,
+        top: Math.random() * h,
+        transition: 'all 2s'})
+    })
+    gif.on('mouseout', () => {
+      setTimeout(() => {
+        gif.css({ width: `${w}px`/4, height: `${h}px`/4 })
+      }, 1000)
+    })
       .addTo('body')
   }
   
@@ -40,11 +61,8 @@
       overflow: 'hidden'
     })
 
-    createGifCircle(300, 0.05, 150, GIF)
-    
-    //createGifCircle(22, 0.4, 150, GIF)
-    
-    //createGifCircle(22, 0.4, 200, GIF)
+    createGifCircle(300, 0.08, 200, GIF)
+
   }
   
   nn.on('load', setup)
