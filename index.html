@@ -18,13 +18,15 @@
   
   function createGif (x, y, w, h, url) {
     const gif = nn.create('img')
-      .set({ src: `${url}#${Math.random()}` })
-      .css({
+    const originX = x - w/8
+    const originY = y - h/8
+      gif.set({ src: `${url}#${Math.random()}` })
+      gif.css({
         position: 'absolute',
         width: w/4,
         height: h/4,
-        left: x - w/4 / 2,
-        top: y - h/4 / 2
+        left: originX,
+        top: originY
       })
     gif.on('mouseover', () => {
       gif.css({ 
@@ -32,12 +34,16 @@
         width: w/4, 
         height: h/4,
         left: 0,
-        top: Math.random() * h,
+        top: Math.random() * nn.height,
         transition: 'all 2s'})
     })
     gif.on('mouseout', () => {
       setTimeout(() => {
-        gif.css({ width: `${w}px`/4, height: `${h}px`/4 })
+        gif.css({ 
+          width: `${w/4}px`, 
+          height: `${h/4}px`, 
+          left: `${originX}px`,
+          top: `${originY}px`})
       }, 1000)
     })
       .addTo('body')
